@@ -16,7 +16,8 @@ public class GeneticTravellingSalesman {
     private final int NUMBER_OF_CITIES = 7;  //number of cities to solve for
     private final int MAX_DISTANCE = 25;    //max distance between cities
     private final int MIN_DISTANCE = 5;     //min distance between cities
-    private final int INDIVIDUAL_SIZE = this.NUMBER_OF_CITIES - 1; //size of each individual
+    private final int INDIVIDUAL_SIZE = this.NUMBER_OF_CITIES + 1; //size of each individual
+    private final int POPULATION_SIZE = 15; //number of tours per population
     private ArrayList<Tour> population;
     private int[][] cityMap;
 
@@ -27,8 +28,9 @@ public class GeneticTravellingSalesman {
     public void run() {
         this.createCityMap();
         this.printCityMap();
+        //this.createInitialPopulation();
     }
-    
+
     public void createCityMap() {
 
         this.cityMap = new int[this.NUMBER_OF_CITIES][this.NUMBER_OF_CITIES];
@@ -40,6 +42,22 @@ public class GeneticTravellingSalesman {
         }
     }
 
+    /**
+     * Creates a random tour as an individual
+     *
+     * @return
+     */
+    public Tour createRandomTour() {
+        Tour temp = null;
+        return temp;
+    }
+
+    public void createInitialPopulation() {
+        for (int i = 0; i < this.POPULATION_SIZE; i++) {
+            this.population.add(this.createRandomTour());
+            this.population.get(i).printTour();
+        }
+    }
 
     /**
      * Helper class that will contain a path from one city to another and its
@@ -71,21 +89,29 @@ public class GeneticTravellingSalesman {
             this.myTour = tour;
         }
 
+        public void printTour() {
+            for (int i = 0; i < myTour.size(); i++) {
+                Path temp = myTour.get(i);
+                System.out.print(" " + temp.startCity + "-" + temp.distance + "->" + temp.endCity + " ");
+            }
+            System.out.println();
+        }
+
     }
 
-    public void printCityMap(){
+    public void printCityMap() {
         for (int i = 0; i < this.NUMBER_OF_CITIES; i++) {
             for (int j = 0; j < this.NUMBER_OF_CITIES; j++) {
-                if(this.cityMap[i][j] > 9){
-                    System.out.print(this.cityMap[i][j]+"  ");
+                if (this.cityMap[i][j] > 9) {
+                    System.out.print(this.cityMap[i][j] + "  ");
                 } else {
-                    System.out.print(" "+this.cityMap[i][j]+"  ");
+                    System.out.print(" " + this.cityMap[i][j] + "  ");
                 }
             }
             System.out.println();
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */
