@@ -30,6 +30,10 @@ public class GeneticTravellingSalesman {
         this.printCityMap();
         System.out.println();
         this.createInitialPopulation();
+        
+        for (int i = 0; i < 10; i++) {
+            this.printPopulationStats(i);
+        }
     }
 
     public void createCityMap() {
@@ -113,11 +117,30 @@ public class GeneticTravellingSalesman {
             this.myTour = tour;
         }
 
+        public int getTotalDistance(){
+            int sum = 0;
+            for (int i = 0; i < myTour.size(); i++) {
+                sum += myTour.get(i).distance;
+            }
+            return sum;
+        }
+        
         public void printTour() {
             for (int i = 0; i < myTour.size(); i++) {
                 Path temp = myTour.get(i);
-                System.out.print(" " + temp.startCity + "-" + temp.distance + "->" + temp.endCity + " ");
+                String scPad = " ";
+                String distPad = "0";
+                String ecPad = " ";
+                if(temp.startCity>9)
+                    scPad = "";
+                if(temp.distance>9)
+                    distPad = "";
+                if(temp.endCity>9)
+                    ecPad = "";
+                System.out.print(" " +scPad+ temp.startCity + " -" +distPad+ temp.distance + "-> " 
+                        +ecPad+ temp.endCity);
             }
+            System.out.println("  Total Distance: "+this.getTotalDistance());
             System.out.println();
         }
 
@@ -132,10 +155,29 @@ public class GeneticTravellingSalesman {
                     System.out.print(" " + this.cityMap[i][j] + "  ");
                 }
             }
-            System.out.println("");
         }
     }
 
+    public void printPopulationStats(int gen){
+        System.out.println("\nPopulation for Generation "+gen+"\n");
+        for (int i = 0; i < this.population.size(); i++) {
+            population.get(i).printTour();
+        }
+        System.out.println("\n Best Tour for this Generation \n");
+        population.get(this.findBestTour()).printTour();
+    }
+    
+    public int findBestTour(){
+        int shortestPath = 99999;
+        int index = 0;
+        for (int i = 0; i < this.population.size(); i++) {
+            if(this.population.get(i).getTotalDistance() < shortestPath){
+                shortestPath = this.population.get(index).getTotalDistance();
+                index = i;
+            }
+        }
+        return index;
+    }
     /**
      * @param args the command line arguments
      */
