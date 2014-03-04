@@ -16,8 +16,8 @@ public class GeneticTravellingSalesman {
     private final int NUMBER_OF_CITIES = 7;  //number of cities to solve for
     private final int MAX_DISTANCE = 25;    //max distance between cities
     private final int MIN_DISTANCE = 5;     //min distance between cities
-    private final int INDIVIDUAL_SIZE = this.NUMBER_OF_CITIES + 1; //size of each individual
-    private final int POPULATION_SIZE = 15; //number of tours per population
+    private final int INDIVIDUAL_SIZE = this.NUMBER_OF_CITIES; //size of each individual
+    private final int POPULATION_SIZE = 10; //number of tours per population
     private ArrayList<Tour> population;
     private int[][] cityMap;
 
@@ -28,7 +28,8 @@ public class GeneticTravellingSalesman {
     public void run() {
         this.createCityMap();
         this.printCityMap();
-        //this.createInitialPopulation();
+        System.out.println();
+        this.createInitialPopulation();
     }
 
     public void createCityMap() {
@@ -49,6 +50,29 @@ public class GeneticTravellingSalesman {
      */
     public Tour createRandomTour() {
         Tour temp = null;
+        ArrayList<Path> tempPaths = new ArrayList<Path>();
+        //set up, all tours must begin with city 0 and end with city 0
+        boolean[] used = new boolean[this.NUMBER_OF_CITIES];
+        Random r = new Random();
+        int firstCity = r.nextInt(this.NUMBER_OF_CITIES-1);
+        firstCity++;
+        used[firstCity] = true;
+        used[0] = true;
+        int fromCity = firstCity;
+        int nextCity = 0;
+        tempPaths.add(new Path(0, this.cityMap[0][firstCity], firstCity));
+        for (int i = 0; i < this.NUMBER_OF_CITIES - 2; i++) {
+            do {
+                nextCity = r.nextInt(this.NUMBER_OF_CITIES);
+                //System.out.println("cityPicked "+nextCity +"used? "+used[nextCity]);
+            } while (used[nextCity]);
+            //System.out.println("addint to paths+ "+fromCity+":" +this.cityMap[fromCity][nextCity]+":"+ nextCity);
+            tempPaths.add(new Path(fromCity, this.cityMap[fromCity][nextCity], nextCity));
+            used[nextCity] = true;
+            fromCity = nextCity;
+        }
+        tempPaths.add(new Path(fromCity, this.cityMap[fromCity][0],0));
+        temp = new Tour(tempPaths);
         return temp;
     }
 
@@ -108,7 +132,7 @@ public class GeneticTravellingSalesman {
                     System.out.print(" " + this.cityMap[i][j] + "  ");
                 }
             }
-            System.out.println();
+            System.out.println("");
         }
     }
 
